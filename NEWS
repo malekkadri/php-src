@@ -220,6 +220,8 @@ PHP                                                                        NEWS
     out-of-range width or height. (Ilia Alshanetsky)
 
 - Streams:
+  . Fixed bug GH-25232 (ftruncate() does not invalidate the stat cache).
+    (malekkadri)
   . Fixed bug GH-22063 (Stream filter chain UAF on self-removal during
     callback). (Ilia Alshanetsky)
   . Fixed leaks and data loss when user filter leaves buckets on input

@@ -1015,12 +1015,21 @@ static int php_stdiop_set_option(php_stream *stream, int option, int value, void
 					if (0 == SetEndOfFile(h)) {
 						return PHP_STREAM_OPTION_RETURN_ERR;
 					}
+					if (EG(active)) {
+						php_clear_stat_cache(0, NULL, 0);
+					}
 					if (!SetFilePointerEx(h, old_sz, NULL, FILE_BEGIN)) {
 						return PHP_STREAM_OPTION_RETURN_ERR;
 					}
 					return PHP_STREAM_OPTION_RETURN_OK;
 #else
-					return ftruncate(fd, new_size) == 0 ? PHP_STREAM_OPTION_RETURN_OK : PHP_STREAM_OPTION_RETURN_ERR;
+					if (ftruncate(fd, new_size) != 0) {
+						return PHP_STREAM_OPTION_RETURN_ERR;
+					}
+					if (EG(active)) {
+						php_clear_stat_cache(0, NULL, 0);
+					}
+					return PHP_STREAM_OPTION_RETURN_OK;
 #endif
 				}
 			}
